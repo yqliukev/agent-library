@@ -1,3 +1,3 @@
 ### Generate Solution
-Mainly describe the best solution. Summarize alternatives only at the very end with a table. Clearly separate parts of the answer.
-Describe the solution step-by-step
+Focus on describing the best solution. Summarize alternatives only at the very end with a table or list. Clearly separate parts of the answer.
+Describe how to use the solution step-by-step, do not justify the answer
