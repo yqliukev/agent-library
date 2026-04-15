@@ -1,6 +1,4 @@
-Research candidate solutions for the problem below. 
-
-Produce a concise, easy-to-scan comparison of options. Requirements:
+Research candidate solutions for the problem below. Produce a concise, easy-to-scan comparison of options. Requirements:
 - Give 4–8 candidate approaches as a numbered list.
 - For each approach include:
 	- Title (one short line)
