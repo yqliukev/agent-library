@@ -1,4 +1,4 @@
-Research candidate solutions for the problem below. Produce a concise, easy-to-scan comparison of options. Requirements:
+Research candidate solutions for the problem below. Produce a concise, easy-to-scan comparison of options. If you need assumptions, state them briefly before the list. Requirements:
 - Give 4–8 candidate approaches as a numbered list.
 - For each approach include:
 	- Title (one short line)
@@ -12,5 +12,3 @@ Formatting:
 - Use a numbered list; use short bullets within each item.
 - Keep responses concise and readable (aim ~200–400 words).
 - Do not use large headers.
-
-If you need assumptions, state them briefly before the list.
