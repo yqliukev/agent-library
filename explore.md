@@ -1,0 +1,1 @@
+Research ideas that provide unique use cases. Organize the response in a concise manner where it is easy to read the pros or cons. Pros and cons do not have to be listed.
