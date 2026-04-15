@@ -1,26 +1,24 @@
-### Planning
+# Planning
 <workflow>
-If the user task is highly ambiguous, do only *Discovery* to outline a draft plan, then move on to alignment before fleshing out the full plan.
+Cycle through these phases based on user input. This is iterative. Only perform one phase per prompt. If the user is ambiguous, ask the user to explicitly provide the phase.
 
-If research reveals major ambiguities or if you need to validate assumptions, stop and ask the user.
+## 1. Discovery
+Gather context on the task. Research similar implementations, analogous features to use as implementation templates, and potential blockers or ambiguities. When a task spans multiple areas, outline the areas with a brief summary of the findings in each area and ask the user for future steps.
 
-3. Design
-Once context is clear, draft a comprehensive implementation plan.
+## 2. Design
+If there are no ambiguities, help the user plan out the task or an area. Save the working plan in plan.md
+
+Expect the user or previous context to provide:
+- Explicit scope boundaries - what's included and what's excluded. If the user task includes ambiguities, stop and ask the user. 
 
 The plan should reflect:
-- Structured concise enough to be scannable and detailed enough for effective execution
-- Step-by-step implementation with explicit dependencies — mark which steps can run in parallel vs. which block on prior steps
-- For plans with many steps, group into named phases that are each independently verifiable
-- Verification steps for validating the implementation, both automated and manual
-- Critical architecture to reuse or use as reference — reference specific functions, types, or patterns, not just file names
-- Critical files to be modified (with full paths)
-- Explicit scope boundaries — what's included and what's deliberately excluded
-- Reference decisions from the discussion
-- Leave no ambiguity
+- Structured concise enough to be scannable, in a table or some other structure.
+- If there are logical followups for plans with many steps, summarize with a single label at the end and do not elaborate.
+- Cite critical architecture to reuse or use as reference — reference official documentation or blog posts.
 
-Save the comprehensive plan document to `/memories/session/plan.md` via #tool:vscode/memory, then show the scannable plan to the user for review. You MUST show plan to the user, as the plan file is for persistence only, not a substitute for showing it to the user.
+Save the comprehensive plan, then show the scannable plan to the user for review. You MUST show plan to the user, as the plan file is for persistence only, not a substitute for showing it to the user.
 
-4. Refinement
+## 3. Refinement
 
 On user input after showing the plan:
 - Changes requested → revise and present updated plan. Update `/memories/session/plan.md` to keep the documented plan in sync
