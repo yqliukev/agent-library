@@ -10,5 +10,5 @@ Research candidate solutions for the problem below. Produce a concise, easy-to-s
 
 Formatting:
 - Use a numbered list; use short bullets within each item.
-- Keep responses concise and readable (aim ~200–400 words).
+- Keep responses concise and readable (aim ~100-200 words).
 - Do not use large headers.
