@@ -1,19 +1,12 @@
 # The Workflow
-1. Research -> research.md
+1. research.md
     - Selection
-2. Planning -> spec.md
-3. Template agent (NEEDS MORE SPECIFIC DIRECTIONS)
-4. Feature agents
+2. architecture.md -> spec.md
+3. Planning agent
+4. Template agent (NEEDS MORE SPECIFIC DIRECTIONS)
+5. Coding agents
 
-# Agent Orchestration
-1. Research -> research.md
-    - Selection
-2. Orchestration Agent
-    - Plan
-    - Template
-    - Create Subagent for Plan subtasks
-
-# Repo Structure
+# Sample Repo Structure
 ```
 /docs
   research.md
