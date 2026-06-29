@@ -1,55 +1,182 @@
-# Planning
-<workflow>
-Cycle through these phases based on user input. This is iterative. Only perform one phase per prompt. If the user is ambiguous, ask the user to explicitly provide the phase.
+---
+name: project-planning
+description: Plans projects and records broad architectural decisions in spec.md, splitting work into distinct implementation steps. Use when starting a new project, defining architecture, scoping phases, writing a project spec, or when the user asks for project planning, roadmap, or high-level design before implementation.
+---
 
-## 1. Discovery
-Gather context on the task. Research similar implementations, analogous features to use as implementation templates, and potential blockers or ambiguities. When a task spans multiple areas, outline the areas with a brief summary of the findings in each area and ask the user for future steps.
+# Project Planning
 
-## 2. Design
-If there are no ambiguities, help the user plan out the task or an area. Save the working plan in plan.md
+Planning-only workflow. **Do not write, edit, or scaffold application code.** The only file you may create or update is `spec.md` at the project root (unless the user specifies another path).
 
-Expect the user or previous context to provide:
-- Explicit scope boundaries - what's included and what's excluded. If the user task includes ambiguities, stop and ask the user. 
+## Inputs
 
-The plan should reflect:
-- Structured concise enough to be scannable, in a table or some other structure.
-- If there are logical followups for plans with many steps, summarize with a single label at the end and do not elaborate.
-- Cite critical architecture to reuse or use as reference — reference official documentation or blog posts.
+Before planning, read:
 
-Save the comprehensive plan, then show the scannable plan to the user for review. You MUST show plan to the user, as the plan file is for persistence only, not a substitute for showing it to the user.
+1. The user's goal, constraints, and preferences from the conversation
+2. Existing project docs: `README`, `AGENTS.md`, `.cursor/rules`, prior `spec.md`
+3. `.cursor/research.md` if it exists — treat its recommendations as starting points, not final decisions
 
-## 3. Refinement
+If research is missing and stack or approach is still wide open, suggest running project research first. Do not block planning on it unless the user wants research done first.
 
-On user input after showing the plan:
-- Changes requested → revise and present updated plan. Update `/memories/session/plan.md` to keep the documented plan in sync
-- Questions asked → clarify, or use #tool:vscode/askQuestions for follow-ups
-- Alternatives wanted → loop back to **Discovery** with new subagent
-- Approval given → acknowledge, the user can now use handoff buttons
+## Scope of this skill
 
-Keep iterating until explicit approval or handoff.
-</workflow>
+**In scope (broad):**
 
-<plan_style_guide>
-```markdown
+- Project goal and success criteria
+- Major components and how they interact
+- Technology choices at the category level (e.g. "Postgres", "React SPA", "REST API")
+- Data flow, deployment target, auth model, integration boundaries
+- Splitting work into ordered, distinct steps for later implementation
 
-**Steps**
-1. {Implementation step-by-step — note dependency ("*depends on N*") or parallelism ("*parallel with step N*") when applicable}
-2. {For plans with 5+ steps, group steps into named phases with enough detail to be independently actionable}
+**Out of scope (defer to implementation agents):**
 
-*Verification**
-1. {Verification steps for validating the implementation (**Specific** tasks, tests, commands, MCP tools, etc; not generic statements)}
+- File structure, class names, API route shapes
+- Library versions, config values, error message copy
+- Test strategy details, CI pipeline steps, lint rules
+- Step-internal design (schemas, component trees, algorithms)
 
-**Decisions** (if applicable)
-- {Decision, assumptions, and includes/excluded scope}
+When a decision is too detailed for this stage, record it under the relevant step as **Deferred decisions** for the implementing agent.
 
-**Further Considerations** (if applicable, 1-3 items)
-1. {Clarifying question with recommendation. Option A / Option B / Option C}
-2. {…}
+## When to ask the user
+
+Ask **only when needed** — do not questionnaire every choice upfront.
+
+| Ask when | Skip when |
+|----------|-----------|
+| Two or more viable approaches with meaningful tradeoffs for *this* project | One option clearly fits stated constraints |
+| A missing constraint would change component boundaries or tech category | Detail can safely default to common practice and be reversed later |
+| Build vs buy, hosted vs self-hosted, or similar product-level forks | Choice is an implementation detail inside an already-agreed boundary |
+| User preference matters and is not inferable from prior messages | Research or spec already documents the decision |
+
+**How to ask:**
+
+- One focused question (or a small set of tightly related options) at a time
+- Present 2–4 options with brief tradeoffs tied to the project — not generic pros/cons
+- After the user answers, update `spec.md` and continue; do not re-ask settled items
+
+If several decisions are independent, you may batch them in one message. If decisions depend on each other, resolve the blocking one first.
+
+## Workflow
+
+```
+- [ ] Read goal, constraints, and existing docs (including research.md)
+- [ ] Identify architectural decision points still open
+- [ ] Ask user for clarification only where needed
+- [ ] Define broad architecture (components, boundaries, key tech categories)
+- [ ] Split project into distinct, ordered steps
+- [ ] Write or update spec.md
+- [ ] Confirm: no application code was written
 ```
 
+### Splitting into steps
 
-Rules:
-- NO code blocks — describe changes, link to files and specific symbols/functions
-- NO blocking questions at the end — ask during workflow via #tool:vscode/askQuestions
-- The plan MUST be presented to the user, don't just mention the plan file.
-</plan_style_guide>
+Each step should be:
+
+- **Distinct** — one coherent slice of work (e.g. "Auth and user model", not "Auth + billing + admin UI")
+- **Implementable** — a future agent can execute it using this spec without re-planning the whole project
+- **Ordered** — note dependencies; later steps may depend on earlier ones
+- **Broad** — outcome described, not file-by-file instructions
+
+Per step, include:
+
+- **Goal** — what exists when the step is done
+- **Scope** — what's in and out
+- **Depends on** — step IDs or "none"
+- **Deferred decisions** — detailed choices left to the implementing agent
+
+Target **3–8 steps** for most projects. Split further only if the user asks or complexity clearly requires it.
+
+## Hard rules
+
+- **Never write code** — no implementation files, configs, scripts, tests, or boilerplate
+- **Only output file**: `spec.md` (create or merge; preserve still-valid content when updating)
+- **Broad decisions only** — push detail to step-level **Deferred decisions**
+- **No secrets** — do not paste API keys or credentials into the spec
+
+## Update spec.md
+
+- If the file exists, **merge**: keep valid decisions, update changed items, mark superseded sections
+- If new, create from the template below
+- Write for **both humans and agents**: clear headings, stable step IDs, explicit constraints
+
+### Document template
+
+```markdown
+# Project Spec
+
+**Project:** [one-line goal]
+**Status:** [draft | approved]
+**Last updated:** [YYYY-MM-DD]
+
+## Goal
+
+[What we're building and why — 2–4 sentences]
+
+## Success criteria
+
+- [Measurable or verifiable outcomes]
+
+## Constraints
+
+- [Hard limits: platform, timeline, budget, compliance, must-use/must-avoid tech]
+
+## Architecture overview
+
+[High-level description: major components, data flow, deployment. A simple diagram in mermaid is optional but helpful.]
+
+### Key decisions
+
+| Decision | Choice | Rationale |
+|----------|--------|-----------|
+| [e.g. Database] | [e.g. Postgres] | [Why, tied to project constraints] |
+
+## Steps
+
+### Step 1: [Short title]
+
+**ID:** `step-1`
+**Goal:** [Outcome when complete]
+**Scope:** [In scope / out of scope bullets]
+**Depends on:** none
+
+**Deferred decisions:**
+- [Detail for implementing agent to resolve]
+
+---
+
+### Step 2: [Short title]
+
+**ID:** `step-2`
+**Goal:** ...
+**Scope:** ...
+**Depends on:** `step-1`
+
+**Deferred decisions:**
+- ...
+
+## Open questions
+
+- [Unresolved items needing user input before or during implementation]
+
+## References
+
+- [Links to research.md, external docs, or prior art — optional]
+```
+
+Use stable step IDs (`step-1`, `step-2`, …) so implementation agents and issues can reference them.
+
+## Quality bar
+
+- **Actionable**: every section should guide a developer or agent; avoid filler
+- **Honest tradeoffs**: recorded decisions include rationale, not buzzwords
+- **Separation of concerns**: architecture here, implementation detail in **Deferred decisions**
+- **Stable**: prefer renaming sections over duplicating conflicting content when updating
+
+## Handoff to implementation
+
+When a step is ready to build, the implementing agent should read:
+
+1. This `spec.md` (full context)
+2. The specific step section (scope and deferred decisions)
+3. `.cursor/research.md` if relevant to that step
+
+Do not re-litigate broad decisions locked in **Key decisions** unless the user explicitly changes direction.
